@@ -2,7 +2,7 @@
 
 Anonymous Twitter-style confession board for college campuses. Built for a DevOps workshop — intentionally simple, no frameworks.
 
-## Tech Stack
+## Tech Stackdfddfd
 
 - **Backend:** Node.js + Express (no frameworks beyond Express)
 - **Database:** SQLite3 (file-based, `confessions.db` auto-created on first run)
