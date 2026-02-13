@@ -4,70 +4,498 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Confessions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f5;
-            color: #0f1419;
+            font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a1a 100%);
+            color: #00ffff;
             min-height: 100vh;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Animated Background Elements ──────────────────────── */
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 10s linear infinite;
+            z-index: -2;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #00ffff;
+            animation: float-up 8s linear infinite;
+        }
+
+        .data-stream {
+            position: absolute;
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, #ff00ff, transparent);
+            animation: stream-fall 3s linear infinite;
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 0, 255, 0.03) 2px,
+                rgba(255, 0, 255, 0.03) 4px
+            );
+            animation: scanlines 8s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ── Lightning Effects ───────────────────────────── */
+        .lightning-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .lightning-bolt {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent,
+                #ffffff 20%,
+                #00ffff 40%,
+                #ffffff 60%,
+                #ff00ff 80%,
+                transparent
+            );
+            filter: blur(1px);
+            opacity: 0;
+            transform-origin: top center;
+            animation: lightning-strike 0.2s ease-out;
+        }
+
+        .lightning-bolt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(8px);
+            opacity: 0.6;
+        }
+
+        .lightning-branch {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, #ffffff, #00ffff, transparent);
+            opacity: 0;
+            transform-origin: top center;
+            animation: lightning-branch 0.15s ease-out;
+        }
+
+        .energy-arc {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #ff00ff 20%,
+                #00ffff 50%,
+                #ff00ff 80%,
+                transparent
+            );
+            opacity: 0;
+            filter: blur(2px);
+            animation: energy-arc-flow 2s ease-in-out infinite;
+        }
+
+        .plasma-ball {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                #ffffff 0%,
+                #00ffff 20%,
+                #ff00ff 40%,
+                transparent 70%
+            );
+            opacity: 0;
+            filter: blur(3px);
+            animation: plasma-pulse 3s ease-in-out infinite;
+        }
+
+        .electric-spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px #ff00ff,
+                0 0 30px #ffffff;
+            opacity: 0;
+            animation: spark-fly 1s ease-out forwards;
+        }
+
+        .thunder-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 255, 255, 0.1) 0%,
+                transparent 50%
+            );
+            opacity: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* ── Cyberpunk Bike Effects ─────────────────────────── */
+        .bike-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cyberbike {
+            position: absolute;
+            width: 120px;
+            height: 40px;
+            top: 20%;
+            left: -150px;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .bike-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            clip-path: polygon(
+                0% 50%,
+                15% 20%,
+                40% 10%,
+                60% 15%,
+                85% 25%,
+                100% 40%,
+                100% 60%,
+                85% 75%,
+                60% 85%,
+                40% 90%,
+                15% 80%,
+                0% 50%
+            );
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.8),
+                inset 0 0 10px rgba(255, 0, 255, 0.6);
+        }
+
+        .bike-wheel {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 3px solid #ff00ff;
+            background: radial-gradient(circle, #00ffff 0%, transparent 70%);
+            box-shadow: 
+                0 0 15px #ff00ff,
+                inset 0 0 10px #00ffff;
+            animation: wheel-spin 0.5s linear infinite;
+        }
+
+        .bike-wheel.front {
+            top: 15px;
+            right: 10px;
+        }
+
+        .bike-wheel.rear {
+            top: 15px;
+            left: 10px;
+        }
+
+        .bike-light {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: light-pulse 0.3s ease-in-out infinite alternate;
+        }
+
+        .bike-light.headlight {
+            top: 10px;
+            right: 5px;
+            background: #ffffff;
+            box-shadow: 0 0 20px #ffffff, 0 0 40px #00ffff;
+        }
+
+        .bike-light.taillight {
+            top: 15px;
+            left: 2px;
+            background: #ff00ff;
+            box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff0000;
+        }
+
+        .bike-trail {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 0, 255, 0.8) 30%,
+                rgba(0, 255, 255, 0.8) 70%,
+                transparent 100%
+            );
+            top: 50%;
+            right: 100%;
+            filter: blur(2px);
+            opacity: 0.8;
+            animation: trail-fade 1s ease-out forwards;
+        }
+
+        .bike-exhaust {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00ffff 0%, transparent 70%);
+            box-shadow: 0 0 8px #00ffff;
+            opacity: 0;
+            animation: exhaust-particle 1s ease-out forwards;
+        }
+
+        .speed-line {
+            position: absolute;
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 255, 255, 0.6) 50%,
+                transparent 100%
+            );
+            opacity: 0;
+            animation: speed-line-move 0.8s ease-out forwards;
+        }
+
+        .bike-glow {
+            position: absolute;
+            width: 140px;
+            height: 60px;
+            top: -10px;
+            left: -10px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 255, 255, 0.3) 0%,
+                rgba(255, 0, 255, 0.2) 40%,
+                transparent 70%
+            );
+            filter: blur(8px);
+            opacity: 0.6;
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+
+        .neon-trail {
+            position: absolute;
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent,
+                #ff00ff,
+                #00ffff,
+                #ff00ff,
+                transparent
+            );
+            top: 50%;
+            right: 100%;
+            filter: blur(3px);
+            opacity: 0;
+            animation: neon-trail-flow 1.5s ease-out forwards;
+        }
+
+        /* ── Audio Controls ──────────────────────────────── */
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audio-toggle {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ff00ff;
+            border-radius: 50%;
+            background: rgba(255, 0, 255, 0.1);
+            color: #00ffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .audio-toggle:hover {
+            background: rgba(255, 0, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .audio-toggle.active {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 0, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px #00ffff;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px #00ffff;
+            border: none;
         }
 
         /* ── Layout ─────────────────────────────────── */
         .timeline {
             max-width: 600px;
             margin: 0 auto;
-            background: #fff;
+            background: linear-gradient(180deg, rgba(10,10,20,0.95) 0%, rgba(20,10,30,0.95) 100%);
             min-height: 100vh;
-            border-left: 1px solid #eff3f4;
-            border-right: 1px solid #eff3f4;
+            border-left: 2px solid #ff00ff;
+            border-right: 2px solid #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+            animation: timeline-glow 4s ease-in-out infinite alternate;
         }
 
         /* ── Header ─────────────────────────────────── */
         .top-bar {
             position: sticky;
             top: 0;
-            background: rgba(255,255,255,0.85);
+            background: linear-gradient(90deg, rgba(255,0,255,0.1) 0%, rgba(0,255,255,0.1) 100%);
             backdrop-filter: blur(12px);
             z-index: 50;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #ff00ff;
+            box-shadow: 0 2px 20px rgba(255, 0, 255, 0.4);
         }
         .top-bar-inner {
             padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .top-bar h1 {
             font-size: 1.25em;
-            font-weight: 700;
+            font-weight: 900;
+            font-family: 'Orbitron', monospace;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
         }
         .top-bar .subtitle {
             font-size: 0.8em;
-            color: #536472;
+            color: #00ffff;
             font-weight: 400;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
         }
 
         /* Tabs */
         .tabs {
             display: flex;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #00ffff;
+            background: rgba(0, 255, 255, 0.05);
         }
         .tab {
             flex: 1;
             text-align: center;
             padding: 14px 0;
             font-size: 0.9em;
-            font-weight: 500;
-            color: #536471;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
             cursor: pointer;
             position: relative;
-            transition: background 0.2s;
+            transition: all 0.3s;
             border: none;
             background: none;
-            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .tab:hover { background: #f7f7f7; }
-        .tab.active { color: #0f1419; font-weight: 700; }
+        .tab:hover { 
+            background: linear-gradient(90deg, rgba(255,0,255,0.2) 0%, rgba(0,255,255,0.2) 100%);
+            box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.3);
+            animation: hover-glow 2s ease-in-out infinite;
+        }
+        .tab.active { 
+            color: #ff00ff; 
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+        }
         .tab.active::after {
             content: '';
             position: absolute;
@@ -76,16 +504,18 @@
             transform: translateX(-50%);
             width: 56px;
             height: 4px;
-            background: #e0446d;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
             border-radius: 2px;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
         }
 
         /* ── Compose ────────────────────────────────── */
         .compose {
             padding: 12px 16px;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #ff00ff;
             display: flex;
             gap: 12px;
+            background: rgba(255, 0, 255, 0.05);
         }
         .avatar {
             width: 40px;
@@ -98,22 +528,33 @@
             font-size: 1.1em;
             font-weight: 700;
             color: #fff;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
-        .avatar.compose-avatar { background: #e0446d; }
+        .avatar.compose-avatar { 
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            animation: pulse 2s infinite;
+        }
 
         .compose-body { flex: 1; min-width: 0; }
         .compose textarea {
             width: 100%;
-            border: none;
+            border: 2px solid #00ffff;
             outline: none;
             font-family: inherit;
             font-size: 1.15em;
             resize: none;
             min-height: 52px;
-            color: #0f1419;
+            color: #00ffff;
             line-height: 1.4;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
         }
-        .compose textarea::placeholder { color: #9aa3ad; }
+        .compose textarea::placeholder { 
+            color: rgba(0, 255, 255, 0.5);
+            font-style: italic;
+        }
 
         .compose-moods {
             display: flex;
@@ -124,18 +565,28 @@
         .mood-chip {
             padding: 3px 10px;
             border-radius: 14px;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #ff00ff;
             font-size: 0.78em;
             cursor: pointer;
             transition: all 0.15s;
-            background: #fff;
-            color: #536471;
+            background: rgba(255, 0, 255, 0.1);
+            color: #00ffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .mood-chip:hover { background: #f7f7f7; }
+        .mood-chip:hover { 
+            background: rgba(255, 0, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+            transform: scale(1.05);
+            animation: hover-glow 1s ease-in-out infinite;
+        }
         .mood-chip.selected {
-            background: #fde8ee;
-            border-color: #e0446d;
-            color: #e0446d;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            border-color: #ff00ff;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
         }
 
         .compose-footer {
@@ -143,7 +594,7 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 10px;
-            border-top: 1px solid #eff3f4;
+            border-top: 2px solid #00ffff;
         }
         .compose-left { display: flex; align-items: center; gap: 12px; }
 
@@ -158,45 +609,63 @@
             fill: none;
             stroke-width: 2.5;
         }
-        .char-ring .bg { stroke: #eff3f4; }
-        .char-ring .fill { stroke: #e0446d; transition: stroke-dashoffset 0.2s, stroke 0.2s; }
-        .char-ring .fill.warn { stroke: #ffc107; }
-        .char-ring .fill.limit { stroke: #f44336; }
+        .char-ring .bg { stroke: rgba(0, 255, 255, 0.2); }
+        .char-ring .fill { stroke: #ff00ff; transition: stroke-dashoffset 0.2s, stroke 0.2s; }
+        .char-ring .fill.warn { stroke: #ffff00; }
+        .char-ring .fill.limit { stroke: #ff0000; }
         .char-text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%,-50%);
             font-size: 0.55em;
-            color: #536471;
+            color: #00ffff;
             font-weight: 600;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
         }
 
         .post-btn {
             padding: 8px 20px;
-            background: #e0446d;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
             color: #fff;
-            border: none;
+            border: 2px solid #ff00ff;
             border-radius: 20px;
             font-weight: 700;
             font-size: 0.88em;
             cursor: pointer;
-            transition: opacity 0.15s;
-            font-family: inherit;
+            transition: all 0.15s;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
         }
-        .post-btn:hover { opacity: 0.85; }
-        .post-btn:disabled { opacity: 0.5; cursor: default; }
+        .post-btn:hover { 
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            animation: hover-glow 1.5s ease-in-out infinite;
+        }
+        .post-btn:disabled { 
+            opacity: 0.5; 
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
 
         /* ── Post Card ──────────────────────────────── */
         .post {
             display: flex;
             gap: 12px;
             padding: 12px 16px;
-            border-bottom: 1px solid #eff3f4;
-            transition: background 0.15s;
+            border-bottom: 2px solid #ff00ff;
+            transition: all 0.15s;
             animation: fadeIn 0.3s ease;
+            background: rgba(0, 255, 255, 0.02);
         }
-        .post:hover { background: #f8f8f8; }
+        .post:hover { 
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.2);
+        }
 
         .post-body { flex: 1; min-width: 0; }
 
@@ -209,18 +678,24 @@
         .post-name {
             font-weight: 700;
             font-size: 0.92em;
+            font-family: 'Orbitron', monospace;
+            color: #ff00ff;
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
         }
         .post-handle {
-            color: #536471;
+            color: #00ffff;
             font-size: 0.85em;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
         }
         .post-dot {
-            color: #536471;
+            color: #ffff00;
             font-size: 0.7em;
+            text-shadow: 0 0 5px rgba(255, 255, 0, 0.6);
         }
         .post-time {
-            color: #536471;
+            color: #00ffff;
             font-size: 0.85em;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
         }
 
         .post-mood {
@@ -231,18 +706,20 @@
             margin-bottom: 4px;
             font-weight: 500;
         }
-        .m-love { background: #fde8ee; color: #e0446d; }
-        .m-happy { background: #fff8e1; color: #f9a825; }
-        .m-sad { background: #e3f2fd; color: #1976d2; }
-        .m-angry { background: #fbe9e7; color: #d84315; }
-        .m-anxious { background: #f3e5f5; color: #8e24aa; }
-        .m-excited { background: #e8f5e9; color: #2e7d32; }
+        .m-love { background: rgba(255, 0, 255, 0.2); color: #ff00ff; border: 1px solid #ff00ff; }
+        .m-happy { background: rgba(255, 255, 0, 0.2); color: #ffff00; border: 1px solid #ffff00; }
+        .m-sad { background: rgba(0, 255, 255, 0.2); color: #00ffff; border: 1px solid #00ffff; }
+        .m-angry { background: rgba(255, 0, 0, 0.2); color: #ff0000; border: 1px solid #ff0000; }
+        .m-anxious { background: rgba(128, 0, 255, 0.2); color: #8000ff; border: 1px solid #8000ff; }
+        .m-excited { background: rgba(0, 255, 0, 0.2); color: #00ff00; border: 1px solid #00ff00; }
 
         .post-text {
             font-size: 0.95em;
             line-height: 1.55;
             word-wrap: break-word;
             white-space: pre-wrap;
+            color: #00ffff;
+            text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
         }
 
         /* Emoji reactions row (below text) */
@@ -256,8 +733,8 @@
             width: 32px;
             height: 28px;
             border-radius: 14px;
-            border: 1px solid #eff3f4;
-            background: #fff;
+            border: 2px solid #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
             cursor: pointer;
             font-size: 0.85em;
             display: flex;
@@ -265,10 +742,20 @@
             justify-content: center;
             gap: 2px;
             transition: all 0.15s;
-            color: #536471;
+            color: #00ffff;
         }
-        .emoji-btn:hover { background: #fde8ee; border-color: #e0446d; transform: scale(1.1); }
-        .emoji-btn.reacted { background: #fde8ee; border-color: #e0446d; }
+        .emoji-btn:hover { 
+            background: rgba(255, 0, 255, 0.3);
+            border-color: #ff00ff;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+            animation: hover-glow 1s ease-in-out infinite;
+        }
+        .emoji-btn.reacted { 
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            border-color: #ff00ff;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+        }
         .emoji-btn .e-count {
             font-size: 0.7em;
             font-weight: 600;
@@ -287,24 +774,44 @@
             gap: 6px;
             padding: 6px 10px;
             border-radius: 20px;
-            border: none;
-            background: none;
+            border: 1px solid #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
             cursor: pointer;
             font-size: 0.82em;
-            color: #536471;
+            color: #00ffff;
             transition: all 0.15s;
             font-family: inherit;
         }
         .action svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-        .action:hover.reply-action { color: #1d9bf0; background: rgba(29,155,240,0.1); }
-        .action:hover.repost-action { color: #00ba7c; background: rgba(0,186,124,0.1); }
-        .action:hover.like-action { color: #f91880; background: rgba(249,24,128,0.1); }
-        .action:hover.bookmark-action { color: #1d9bf0; background: rgba(29,155,240,0.1); }
-        .action.liked { color: #f91880; }
-        .action.liked svg { fill: #f91880; stroke: #f91880; }
-        .action.reposted { color: #00ba7c; }
-        .action.bookmarked { color: #1d9bf0; }
-        .action.bookmarked svg { fill: #1d9bf0; }
+        .action:hover.reply-action { 
+            color: #00ffff; 
+            background: rgba(0, 255, 255, 0.2); 
+            border-color: #00ffff;
+            animation: hover-glow 1s ease-in-out infinite;
+        }
+        .action:hover.repost-action { 
+            color: #00ff00; 
+            background: rgba(0, 255, 0, 0.2); 
+            border-color: #00ff00;
+            animation: hover-glow 1s ease-in-out infinite;
+        }
+        .action:hover.like-action { 
+            color: #ff00ff; 
+            background: rgba(255, 0, 255, 0.2); 
+            border-color: #ff00ff;
+            animation: hover-glow 1s ease-in-out infinite;
+        }
+        .action:hover.bookmark-action { 
+            color: #ffff00; 
+            background: rgba(255, 255, 0, 0.2); 
+            border-color: #ffff00;
+            animation: hover-glow 1s ease-in-out infinite;
+        }
+        .action.liked { color: #ff00ff; }
+        .action.liked svg { fill: #ff00ff; stroke: #ff00ff; }
+        .action.reposted { color: #00ff00; }
+        .action.bookmarked { color: #ffff00; }
+        .action.bookmarked svg { fill: #ffff00; }
         .action span { font-size: 0.95em; }
 
         /* ── Replies ────────────────────────────────── */
@@ -318,13 +825,14 @@
             display: flex;
             gap: 10px;
             padding: 10px 0 10px 52px;
-            border-top: 1px solid #eff3f4;
+            border-top: 2px solid #00ffff;
+            background: rgba(0, 255, 255, 0.02);
         }
         .reply-avatar {
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #536471;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
             color: #fff;
             font-size: 0.65em;
             display: flex;
@@ -332,54 +840,105 @@
             justify-content: center;
             flex-shrink: 0;
             font-weight: 700;
+            border: 1px solid #ff00ff;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
         }
         .reply-body { flex: 1; min-width: 0; }
-        .reply-name { font-weight: 600; font-size: 0.82em; }
-        .reply-handle { color: #536471; font-size: 0.78em; }
-        .reply-text { font-size: 0.88em; line-height: 1.45; margin-top: 2px; }
-        .reply-time { font-size: 0.72em; color: #536471; margin-top: 2px; }
+        .reply-name { 
+            font-weight: 600; 
+            font-size: 0.82em;
+            font-family: 'Orbitron', monospace;
+            color: #ff00ff;
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.6);
+        }
+        .reply-handle { 
+            color: #00ffff; 
+            font-size: 0.78em;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
+        }
+        .reply-text { 
+            font-size: 0.88em; 
+            line-height: 1.45; 
+            margin-top: 2px;
+            color: #00ffff;
+            text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
+        }
+        .reply-time { 
+            font-size: 0.72em; 
+            color: #00ffff; 
+            margin-top: 2px;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
+        }
 
         .reply-compose {
             display: flex;
             gap: 10px;
             padding: 10px 0 4px 52px;
-            border-top: 1px solid #eff3f4;
+            border-top: 2px solid #ff00ff;
             align-items: center;
+            background: rgba(255, 0, 255, 0.05);
         }
         .reply-compose input {
             flex: 1;
-            border: 1px solid #eff3f4;
+            border: 2px solid #00ffff;
             border-radius: 20px;
             padding: 8px 14px;
             font-size: 0.85em;
             outline: none;
             font-family: inherit;
-            color: #0f1419;
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
         }
-        .reply-compose input:focus { border-color: #e0446d; }
-        .reply-compose input::placeholder { color: #9aa3ad; }
+        .reply-compose input:focus { 
+            border-color: #ff00ff;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+        }
+        .reply-compose input::placeholder { 
+            color: rgba(0, 255, 255, 0.5);
+            font-style: italic;
+        }
         .reply-compose button {
             padding: 6px 16px;
-            background: #e0446d;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
             color: #fff;
-            border: none;
+            border: 2px solid #ff00ff;
             border-radius: 20px;
             font-weight: 700;
             font-size: 0.8em;
             cursor: pointer;
-            font-family: inherit;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
         }
-        .reply-compose button:hover { opacity: 0.85; }
+        .reply-compose button:hover { 
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+        }
 
         /* ── Empty State ────────────────────────────── */
         .empty {
             text-align: center;
             padding: 80px 20px;
-            color: #9aa3ad;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
         }
-        .empty .icon { font-size: 2.5em; margin-bottom: 10px; }
-        .empty p { font-size: 0.92em; }
-        .empty b { color: #0f1419; }
+        .empty .icon { 
+            font-size: 2.5em; 
+            margin-bottom: 10px;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+        }
+        .empty p { 
+            font-size: 0.92em;
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+        }
+        .empty b { 
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+        }
 
         /* ── Toast ──────────────────────────────────── */
         .toast {
@@ -387,15 +946,21 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(80px);
-            background: #e0446d;
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
             color: #fff;
             padding: 10px 22px;
             border-radius: 8px;
             font-size: 0.88em;
             font-weight: 600;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
             opacity: 0;
             transition: all 0.25s ease;
             z-index: 100;
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -403,15 +968,327 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes stream-fall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        @keyframes timeline-glow {
+            0% {
+                box-shadow: 0 0 30px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(255, 0, 255, 0.2);
+            }
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px rgba(255, 0, 255, 0.8),
+                    2px 2px 0 #ff00ff,
+                    -2px -2px 0 #00ffff;
+            }
+            25% {
+                text-shadow: 
+                    0 0 10px rgba(0, 255, 255, 0.8),
+                    -2px 2px 0 #00ffff,
+                    2px -2px 0 #ff00ff;
+            }
+            50% {
+                text-shadow: 
+                    0 0 15px rgba(255, 0, 255, 1),
+                    2px -2px 0 #ff00ff,
+                    -2px 2px 0 #00ffff;
+            }
+            75% {
+                text-shadow: 
+                    0 0 10px rgba(0, 255, 255, 0.8),
+                    -2px -2px 0 #00ffff,
+                    2px 2px 0 #ff00ff;
+            }
+        }
+
+        @keyframes hover-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes lightning-strike {
+            0% {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+            10% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+            90% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes lightning-branch {
+            0% {
+                opacity: 0;
+                transform: scaleY(0) rotate(var(--rotation));
+            }
+            10% {
+                opacity: 0.8;
+                transform: scaleY(1) rotate(var(--rotation));
+            }
+            100% {
+                opacity: 0;
+                transform: scaleY(1) rotate(var(--rotation));
+            }
+        }
+
+        @keyframes energy-arc-flow {
+            0%, 100% {
+                opacity: 0;
+                transform: translateX(-100px) scaleX(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateX(100px) scaleX(1.5);
+            }
+        }
+
+        @keyframes plasma-pulse {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes spark-fly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--spark-x), var(--spark-y)) scale(0.2);
+            }
+        }
+
+        @keyframes thunder-flash {
+            0%, 100% {
+                opacity: 0;
+            }
+            10%, 20%, 30% {
+                opacity: 0.8;
+            }
+            15%, 25% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes wheel-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes light-pulse {
+            0% {
+                opacity: 0.6;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes trail-fade {
+            0% {
+                opacity: 0.8;
+                transform: scaleX(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scaleX(0.3);
+            }
+        }
+
+        @keyframes exhaust-particle {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50px, -20px) scale(0.3);
+            }
+        }
+
+        @keyframes speed-line-move {
+            0% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-200px);
+            }
+        }
+
+        @keyframes glow-pulse {
+            0% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes neon-trail-flow {
+            0% {
+                opacity: 0;
+                transform: translateX(0) scaleX(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50px) scaleX(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-150px) scaleX(0.8);
+            }
+        }
+
+        @keyframes bike-jump {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(-10deg);
+            }
+        }
+
+        @keyframes bike-boost {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            50% {
+                transform: scale(1.1);
+                filter: brightness(1.5);
+            }
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
     </style>
 </head>
 <body>
+
+<!-- Animated Background Elements -->
+<div class="cyber-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="glitch-overlay"></div>
+<div class="lightning-container" id="lightningContainer"></div>
+<div class="thunder-flash" id="thunderFlash"></div>
+<div class="bike-container" id="bikeContainer"></div>
 
 <div class="timeline">
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="top-bar-inner">
-            <h1>Campus Confessions <span class="subtitle" id="count"></span></h1>
+            <div>
+                <h1>Campus Confessions <span class="subtitle" id="count"></span></h1>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-toggle" id="audioToggle" onclick="toggleAudio()" title="Toggle Sound">
+                    <span id="audioIcon">🔇</span>
+                </button>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30" onchange="changeVolume(this.value)" title="Volume">
+            </div>
         </div>
         <div class="tabs">
             <button class="tab active" onclick="switchTab('recent', this)">For You</button>
@@ -467,6 +1344,782 @@ const liked = new Set();
 const reposted = new Set();
 const bookmarked = new Set();
 const reacted = {}; // { postId: Set<type> }
+
+// ── Cyberpunk Audio System ───────────────────────────
+
+class CyberpunkAudio {
+    constructor() {
+        this.audioContext = null;
+        this.masterVolume = 0.3;
+        this.sounds = {};
+        this.isInitialized = false;
+    }
+
+    async init() {
+        if (this.isInitialized) return;
+        
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            await this.createSounds();
+            this.isInitialized = true;
+            this.startAmbientSounds();
+        } catch (error) {
+            console.log('Audio initialization failed:', error);
+        }
+    }
+
+    async createSounds() {
+        // Create cyberpunk engine sound
+        this.sounds.engine = () => this.createEngineSound();
+        
+        // Create boost sound
+        this.sounds.boost = () => this.createBoostSound();
+        
+        // Create jump sound
+        this.sounds.jump = () => this.createJumpSound();
+        
+        // Create hover sound
+        this.sounds.hover = () => this.createHoverSound();
+        
+        // Create click sound
+        this.sounds.click = () => this.createClickSound();
+        
+        // Create ambient city sound
+        this.sounds.ambient = () => this.createAmbientSound();
+    }
+
+    createEngineSound() {
+        const duration = 2.0;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        const filter = this.audioContext.createBiquadFilter();
+        
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.setValueAtTime(80, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(120, this.audioContext.currentTime + duration);
+        
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, this.audioContext.currentTime);
+        filter.Q.setValueAtTime(10, this.audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.1 * this.masterVolume, this.audioContext.currentTime + 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return oscillator;
+    }
+
+    createBoostSound() {
+        const duration = 0.5;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        const filter = this.audioContext.createBiquadFilter();
+        
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 0.1);
+        oscillator.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + duration);
+        
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.2 * this.masterVolume, this.audioContext.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return oscillator;
+    }
+
+    createJumpSound() {
+        const duration = 0.3;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(400, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 0.1);
+        oscillator.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + duration);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.15 * this.masterVolume, this.audioContext.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return oscillator;
+    }
+
+    createHoverSound() {
+        const duration = 0.1;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(600, this.audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.05 * this.masterVolume, this.audioContext.currentTime + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return oscillator;
+    }
+
+    createClickSound() {
+        const duration = 0.05;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.1 * this.masterVolume, this.audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return oscillator;
+    }
+
+    createAmbientSound() {
+        const duration = 10.0;
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        const filter = this.audioContext.createBiquadFilter();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(60, this.audioContext.currentTime);
+        
+        // Add some modulation for ambient effect
+        const lfo = this.audioContext.createOscillator();
+        const lfoGain = this.audioContext.createGain();
+        lfo.frequency.setValueAtTime(0.2, this.audioContext.currentTime);
+        lfoGain.gain.setValueAtTime(20, this.audioContext.currentTime);
+        
+        lfo.connect(lfoGain);
+        lfoGain.connect(oscillator.frequency);
+        
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(200, this.audioContext.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.02 * this.masterVolume, this.audioContext.currentTime + 1.0);
+        
+        oscillator.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        lfo.start(this.audioContext.currentTime);
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+        
+        return { oscillator, lfo };
+    }
+
+    playSound(soundName) {
+        if (!this.isInitialized || !this.sounds[soundName]) return;
+        
+        try {
+            this.sounds[soundName]();
+        } catch (error) {
+            console.log('Error playing sound:', error);
+        }
+    }
+
+    startAmbientSounds() {
+        // Play ambient city sound periodically
+        setInterval(() => {
+            if (this.isInitialized && Math.random() > 0.7) {
+                this.playSound('ambient');
+            }
+        }, 8000);
+        
+        // Play distant engine sounds
+        setInterval(() => {
+            if (this.isInitialized && Math.random() > 0.8) {
+                this.playSound('engine');
+            }
+        }, 5000);
+    }
+
+    setVolume(volume) {
+        this.masterVolume = Math.max(0, Math.min(1, volume));
+    }
+}
+
+// Initialize audio system
+const cyberpunkAudio = new CyberpunkAudio();
+
+// ── Cyberpunk Bike System ───────────────────────────
+
+function createCyberBike() {
+    const container = document.getElementById('bikeContainer');
+    const bike = document.createElement('div');
+    bike.className = 'cyberbike';
+    bike.id = 'cyberbike';
+    
+    // Bike body
+    const body = document.createElement('div');
+    body.className = 'bike-body';
+    
+    // Wheels
+    const frontWheel = document.createElement('div');
+    frontWheel.className = 'bike-wheel front';
+    
+    const rearWheel = document.createElement('div');
+    rearWheel.className = 'bike-wheel rear';
+    
+    // Lights
+    const headlight = document.createElement('div');
+    headlight.className = 'bike-light headlight';
+    
+    const taillight = document.createElement('div');
+    taillight.className = 'bike-light taillight';
+    
+    // Glow effect
+    const glow = document.createElement('div');
+    glow.className = 'bike-glow';
+    
+    bike.appendChild(glow);
+    bike.appendChild(body);
+    bike.appendChild(frontWheel);
+    bike.appendChild(rearWheel);
+    bike.appendChild(headlight);
+    bike.appendChild(taillight);
+    
+    container.appendChild(bike);
+    
+    return bike;
+}
+
+function createBikeTrail(bike) {
+    const container = document.getElementById('bikeContainer');
+    const trail = document.createElement('div');
+    trail.className = 'bike-trail';
+    
+    const bikeRect = bike.getBoundingClientRect();
+    trail.style.top = (bikeRect.top + bikeRect.height / 2) + 'px';
+    trail.style.left = (bikeRect.left - 100) + 'px';
+    
+    container.appendChild(trail);
+    
+    setTimeout(() => trail.remove(), 1000);
+}
+
+function createNeonTrail(bike) {
+    const container = document.getElementById('bikeContainer');
+    const trail = document.createElement('div');
+    trail.className = 'neon-trail';
+    
+    const bikeRect = bike.getBoundingClientRect();
+    trail.style.top = (bikeRect.top + bikeRect.height / 2) + 'px';
+    trail.style.left = (bikeRect.left - 200) + 'px';
+    
+    container.appendChild(trail);
+    
+    setTimeout(() => trail.remove(), 1500);
+}
+
+function createExhaustParticles(bike) {
+    const container = document.getElementById('bikeContainer');
+    
+    for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+            const exhaust = document.createElement('div');
+            exhaust.className = 'bike-exhaust';
+            
+            const bikeRect = bike.getBoundingClientRect();
+            exhaust.style.top = (bikeRect.top + 15 + Math.random() * 10) + 'px';
+            exhaust.style.left = (bikeRect.left - 5) + 'px';
+            
+            container.appendChild(exhaust);
+            
+            setTimeout(() => exhaust.remove(), 1000);
+        }, i * 100);
+    }
+}
+
+function createSpeedLines(bike) {
+    const container = document.getElementById('bikeContainer');
+    
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const speedLine = document.createElement('div');
+            speedLine.className = 'speed-line';
+            
+            const bikeRect = bike.getBoundingClientRect();
+            speedLine.style.top = (bikeRect.top + Math.random() * bikeRect.height) + 'px';
+            speedLine.style.left = (bikeRect.right + 20) + 'px';
+            
+            container.appendChild(speedLine);
+            
+            setTimeout(() => speedLine.remove(), 800);
+        }, i * 50);
+    }
+}
+
+function animateBike() {
+    const bike = createCyberBike();
+    let position = -150;
+    let speed = 3 + Math.random() * 2;
+    let lane = 15 + Math.random() * 30; // Random lane (15% to 45% from top)
+    let isJumping = false;
+    let isBoosting = false;
+    
+    bike.style.top = lane + '%';
+    
+    function move() {
+        position += speed;
+        bike.style.left = position + 'px';
+        
+        // Create trails
+        if (Math.random() > 0.7) {
+            createBikeTrail(bike);
+        }
+        
+        if (Math.random() > 0.8) {
+            createNeonTrail(bike);
+        }
+        
+        if (Math.random() > 0.6) {
+            createExhaustParticles(bike);
+        }
+        
+        if (Math.random() > 0.5) {
+            createSpeedLines(bike);
+        }
+        
+        // Random jump
+        if (Math.random() > 0.98 && !isJumping) {
+            isJumping = true;
+            bike.style.animation = 'bike-jump 1s ease-out';
+            cyberpunkAudio.playSound('jump');
+            setTimeout(() => {
+                isJumping = false;
+                bike.style.animation = '';
+            }, 1000);
+        }
+        
+        // Random boost
+        if (Math.random() > 0.95 && !isBoosting) {
+            isBoosting = true;
+            speed *= 2;
+            bike.style.animation = 'bike-boost 0.5s ease-out';
+            cyberpunkAudio.playSound('boost');
+            
+            // Create extra effects during boost
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createNeonTrail(bike), i * 100);
+            }
+            
+            setTimeout(() => {
+                isBoosting = false;
+                speed /= 2;
+                bike.style.animation = '';
+            }, 500);
+        }
+        
+        // Continue animation or reset
+        if (position < window.innerWidth + 150) {
+            requestAnimationFrame(move);
+        } else {
+            bike.remove();
+            // Schedule next bike
+            setTimeout(() => animateBike(), 2000 + Math.random() * 3000);
+        }
+    }
+    
+    move();
+}
+
+function startBikeTraffic() {
+    // Start first bike immediately
+    animateBike();
+    
+    // Add more bikes at random intervals
+    setInterval(() => {
+        if (Math.random() > 0.7) {
+            animateBike();
+        }
+    }, 8000);
+}
+
+// ── Lightning Storm System ───────────────────────────
+
+function createLightningBolt() {
+    const container = document.getElementById('lightningContainer');
+    const bolt = document.createElement('div');
+    bolt.className = 'lightning-bolt';
+    
+    // Random position and size
+    const startX = Math.random() * window.innerWidth;
+    const height = 100 + Math.random() * 300;
+    const rotation = -30 + Math.random() * 60;
+    
+    bolt.style.left = startX + 'px';
+    bolt.style.top = '0px';
+    bolt.style.height = height + 'px';
+    bolt.style.transform = `rotate(${rotation}deg)`;
+    
+    container.appendChild(bolt);
+    
+    // Create branches
+    const branchCount = Math.floor(Math.random() * 4) + 1;
+    for (let i = 0; i < branchCount; i++) {
+        const branch = document.createElement('div');
+        branch.className = 'lightning-branch';
+        
+        const branchHeight = 30 + Math.random() * 80;
+        const branchRotation = -45 + Math.random() * 90;
+        const branchY = (height / branchCount) * i + Math.random() * 50;
+        
+        branch.style.left = startX + 'px';
+        branch.style.top = branchY + 'px';
+        branch.style.height = branchHeight + 'px';
+        branch.style.setProperty('--rotation', `${branchRotation}deg`);
+        
+        container.appendChild(branch);
+    }
+    
+    // Trigger thunder flash
+    setTimeout(() => createThunderFlash(), Math.random() * 200);
+    
+    // Clean up
+    setTimeout(() => {
+        bolt.remove();
+        container.querySelectorAll('.lightning-branch').forEach(b => b.remove());
+    }, 1000);
+}
+
+function createEnergyArc() {
+    const container = document.getElementById('lightningContainer');
+    const arc = document.createElement('div');
+    arc.className = 'energy-arc';
+    
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() * window.innerHeight;
+    const rotation = Math.random() * 360;
+    
+    arc.style.left = startX + 'px';
+    arc.style.top = startY + 'px';
+    arc.style.transform = `rotate(${rotation}deg)`;
+    arc.style.animationDelay = Math.random() * 2 + 's';
+    
+    container.appendChild(arc);
+    
+    setTimeout(() => arc.remove(), 4000);
+}
+
+function createPlasmaBall() {
+    const container = document.getElementById('lightningContainer');
+    const plasma = document.createElement('div');
+    plasma.className = 'plasma-ball';
+    
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    
+    plasma.style.left = x + 'px';
+    plasma.style.top = y + 'px';
+    plasma.style.animationDelay = Math.random() * 3 + 's';
+    
+    container.appendChild(plasma);
+    
+    setTimeout(() => plasma.remove(), 6000);
+}
+
+function createElectricSparks(x, y, count = 8) {
+    const container = document.getElementById('lightningContainer');
+    
+    for (let i = 0; i < count; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'electric-spark';
+        
+        const angle = (360 / count) * i;
+        const distance = 50 + Math.random() * 100;
+        const sparkX = Math.cos(angle * Math.PI / 180) * distance;
+        const sparkY = Math.sin(angle * Math.PI / 180) * distance;
+        
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+        spark.style.setProperty('--spark-x', `${sparkX}px`);
+        spark.style.setProperty('--spark-y', `${sparkY}px`);
+        
+        container.appendChild(spark);
+        
+        setTimeout(() => spark.remove(), 1000);
+    }
+}
+
+function createThunderFlash() {
+    const flash = document.getElementById('thunderFlash');
+    flash.style.animation = 'thunder-flash 0.5s ease-out';
+    
+    setTimeout(() => {
+        flash.style.animation = '';
+    }, 500);
+}
+
+function startLightningStorm() {
+    // Random lightning strikes
+    setInterval(() => {
+        if (Math.random() > 0.7) {
+            createLightningBolt();
+        }
+    }, 2000);
+    
+    // Energy arcs
+    setInterval(() => {
+        if (Math.random() > 0.6) {
+            createEnergyArc();
+        }
+    }, 3000);
+    
+    // Plasma balls
+    setInterval(() => {
+        if (Math.random() > 0.8) {
+            createPlasmaBall();
+        }
+    }, 4000);
+    
+    // Spark bursts at random positions
+    setInterval(() => {
+        if (Math.random() > 0.5) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createElectricSparks(x, y, 6 + Math.floor(Math.random() * 8));
+        }
+    }, 1500);
+}
+
+// ── Background Animation System ───────────────────────
+
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 50;
+    
+    for (let i = 0; i < particleCount; i++) {
+        // Create floating particles
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+        particlesContainer.appendChild(particle);
+        
+        // Create data streams
+        if (i % 3 === 0) {
+            const stream = document.createElement('div');
+            stream.className = 'data-stream';
+            stream.style.left = Math.random() * 100 + '%';
+            stream.style.animationDelay = Math.random() * 3 + 's';
+            stream.style.animationDuration = (3 + Math.random() * 2) + 's';
+            particlesContainer.appendChild(stream);
+        }
+    }
+}
+
+function initParallaxEffect() {
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) / window.innerWidth;
+        mouseY = (e.clientY - window.innerHeight / 2) / window.innerHeight;
+    });
+    
+    function animateParallax() {
+        currentX += (mouseX - currentX) * 0.05;
+        currentY += (mouseY - currentY) * 0.05;
+        
+        const grid = document.querySelector('.cyber-grid');
+        const particles = document.querySelector('.particles');
+        
+        if (grid) {
+            grid.style.transform = `translate(${currentX * 20}px, ${currentY * 20}px)`;
+        }
+        if (particles) {
+            particles.style.transform = `translate(${currentX * 10}px, ${currentY * 10}px)`;
+        }
+        
+        requestAnimationFrame(animateParallax);
+    }
+    
+    animateParallax();
+}
+
+function addGlitchEffect() {
+    const title = document.querySelector('.top-bar h1');
+    if (title) {
+        title.style.animation = 'glitch 3s infinite';
+    }
+}
+
+function enhanceInteractions() {
+    // Add hover effects to posts
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('.post')) {
+            e.target.closest('.post').style.animation = 'hover-glow 2s ease-in-out infinite';
+            cyberpunkAudio.playSound('hover');
+        }
+    });
+    
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('.post')) {
+            e.target.closest('.post').style.animation = 'fadeIn 0.3s ease';
+        }
+    });
+    
+    // Add ripple effect to buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const button = e.target;
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.width = '20px';
+            ripple.style.height = '20px';
+            ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            ripple.style.pointerEvents = 'none';
+            
+            const rect = button.getBoundingClientRect();
+            ripple.style.left = (e.clientX - rect.left - 10) + 'px';
+            ripple.style.top = (e.clientY - rect.top - 10) + 'px';
+            
+            button.style.position = 'relative';
+            button.style.overflow = 'hidden';
+            button.appendChild(ripple);
+            
+            cyberpunkAudio.playSound('click');
+            
+            setTimeout(() => ripple.remove(), 600);
+        }
+    });
+}
+
+// ── Initialize Background Effects ───────────────────────
+
+createParticles();
+initParallaxEffect();
+addGlitchEffect();
+enhanceInteractions();
+startLightningStorm();
+startBikeTraffic();
+
+// Initialize audio on first user interaction
+document.addEventListener('click', () => {
+    if (!cyberpunkAudio.isInitialized) {
+        cyberpunkAudio.init();
+    }
+}, { once: true });
+
+// Also initialize on mouse movement for better UX
+document.addEventListener('mousemove', () => {
+    if (!cyberpunkAudio.isInitialized) {
+        cyberpunkAudio.init();
+    }
+}, { once: true });
+
+// ── Interactive Lightning on Click ───────────────────────
+
+document.addEventListener('click', (e) => {
+    // Create sparks at click position
+    if (!e.target.closest('button') && !e.target.closest('input') && !e.target.closest('textarea')) {
+        createElectricSparks(e.clientX, e.clientY, 12);
+        
+        // Sometimes trigger a small lightning bolt from click
+        if (Math.random() > 0.7) {
+            const container = document.getElementById('lightningContainer');
+            const bolt = document.createElement('div');
+            bolt.className = 'lightning-bolt';
+            
+            const height = 50 + Math.random() * 150;
+            const rotation = -60 + Math.random() * 120;
+            
+            bolt.style.left = e.clientX + 'px';
+            bolt.style.top = e.clientY + 'px';
+            bolt.style.height = height + 'px';
+            bolt.style.transform = `rotate(${rotation}deg)`;
+            bolt.style.transformOrigin = 'top center';
+            
+            container.appendChild(bolt);
+            
+            setTimeout(() => bolt.remove(), 800);
+        }
+    }
+});
+
+// ── Audio Control Functions ───────────────────────────
+
+function toggleAudio() {
+    const audioToggle = document.getElementById('audioToggle');
+    const audioIcon = document.getElementById('audioIcon');
+    
+    if (!cyberpunkAudio.isInitialized) {
+        cyberpunkAudio.init();
+    }
+    
+    if (cyberpunkAudio.masterVolume > 0) {
+        cyberpunkAudio.setVolume(0);
+        audioToggle.classList.remove('active');
+        audioIcon.textContent = '🔇';
+    } else {
+        const sliderValue = document.getElementById('volumeSlider').value;
+        cyberpunkAudio.setVolume(sliderValue / 100);
+        audioToggle.classList.add('active');
+        audioIcon.textContent = '🔊';
+    }
+}
+
+function changeVolume(value) {
+    const audioToggle = document.getElementById('audioToggle');
+    const audioIcon = document.getElementById('audioIcon');
+    
+    if (!cyberpunkAudio.isInitialized) {
+        cyberpunkAudio.init();
+    }
+    
+    cyberpunkAudio.setVolume(value / 100);
+    
+    if (value > 0) {
+        audioToggle.classList.add('active');
+        audioIcon.textContent = '🔊';
+    } else {
+        audioToggle.classList.remove('active');
+        audioIcon.textContent = '🔇';
+    }
+}
 
 // ── Anonymous identity from post id ───────────────
 
